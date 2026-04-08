@@ -31,7 +31,6 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
-# ====================== MODELOS ======================
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -47,7 +46,7 @@ class User(UserMixin, db.Model):
 
 class Report(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # pode ser anônimo
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     is_anonymous = db.Column(db.Boolean, default=True)
     type = db.Column(db.String(20), nullable=False)
     title = db.Column(db.String(200), nullable=False)
@@ -64,7 +63,6 @@ class Report(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# ====================== FORMULÁRIOS ======================
 class RegisterForm(FlaskForm):
     username = StringField('Nome de usuário', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -97,7 +95,6 @@ class ReportForm(FlaskForm):
     is_anonymous = BooleanField('Denunciar anonimamente', default=True)
     submit = SubmitField('Enviar')
 
-# ====================== ROTAS ======================
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -158,7 +155,7 @@ def submit():
         )
         db.session.add(report)
         db.session.commit()
-        flash('✅ Denúncia enviada com sucesso! Obrigado por nos ajudar a melhorar.', 'success')
+        flash('Denúncia enviada com sucesso! Obrigado por nos ajudar a melhorar.', 'success')
         return redirect(url_for('index'))
     return render_template('submit.html', form=form)
 
@@ -188,27 +185,25 @@ def update_status(report_id):
     flash('Status atualizado!', 'success')
     return redirect(url_for('admin'))
 
-# ====================== CRIAÇÃO DO BANCO E ADMIN ======================
+with app.app_context():
+    db.create_all()
+
+    admin_email = 'admin@bk.com'
+    if not User.query.filter_by(email=admin_email).first():
+        admin = User(
+            username='admin',
+            email=admin_email,
+            is_admin=True
+        )
+        admin.set_password('admin123')
+        db.session.add(admin)
+        db.session.commit()
+        print("ADMIN CRIADO COM SUCESSO")
+        print("Email: admin@bk.com")
+        print("Senha: admin123")
+    else:
+        print("Admin ja existe - Email: admin@bk.com / Senha: admin123")
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-
-        # Cria admin apenas se não existir (evita duplicidade)
-        admin_email = 'admin@bk.com'
-        if not User.query.filter_by(email=admin_email).first():
-            admin = User(
-                username='admin',
-                email=admin_email,
-                is_admin=True
-            )
-            admin.set_password('admin123')
-            db.session.add(admin)
-            db.session.commit()
-            print("✅ ADMIN CRIADO COM SUCESSO!")
-            print("   → Email : admin@bk.com")
-            print("   → Senha : admin123")
-        else:
-            print("✅ Admin já existe → admin@bk.com / admin123")
-
-    print("\n🚀 Servidor iniciado em http://127.0.0.1:5000")
+    print("Servidor iniciado em http://127.0.0.1:5000")
     app.run(debug=True, port=5000)
