@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+.hero-section {
+    background: var(--bk-dark);
+    border-radius: 16px;
+    padding: 5rem 3rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bk-red) 0%, var(--bk-orange) 100%);
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+    opacity: 0.9;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 580px;
+}
+
+.hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bk-yellow);
+    margin-bottom: 0.75rem;
+}
+
+.hero-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 1.25rem;
+}
+
+.hero-title em {
+    color: var(--bk-yellow);
+    font-style: normal;
+}
+
+.hero-desc {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 2rem;
+    max-width: 420px;
+    line-height: 1.6;
+}
+
+.hero-cta {
+    background: var(--bk-yellow);
+    color: var(--bk-brown);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+    padding: 0.9rem 2.5rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.hero-cta:hover {
+    background: #f0b800;
+    color: var(--bk-brown);
+    transform: translateY(-2px);
+}
+
+.hero-cta .icon {
+    font-size: 1.1rem;
+}
+
+/* ─── CATEGORIES ─── */
+.section-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bk-orange);
+    margin-bottom: 0.5rem;
+}
+
+.section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    text-transform: uppercase;
+    color: var(--bk-dark);
+    margin-bottom: 2rem;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.category-card {
+    background: white;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    cursor: default;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.category-card:hover {
+    border-color: var(--bk-orange);
+    box-shadow: 0 4px 20px rgba(245,130,31,0.1);
+    transform: translateY(-2px);
+    color: inherit;
+    text-decoration: none;
+}
+
+.category-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.category-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--bk-dark);
+}
+
+/* ─── HOW IT WORKS ─── */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.step-card {
+    background: white;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 1.75rem 1.5rem;
+    position: relative;
+}
+
+.step-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 3rem;
+    color: var(--bk-yellow);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.step-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--bk-dark);
+    margin-bottom: 0.4rem;
+}
+
+.step-desc {
+    font-size: 0.88rem;
+    color: #666;
+    line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+    .hero-section { padding: 3rem 1.5rem; }
+    .hero-section::before { display: none; }
+    .steps-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<!-- HERO -->
+<section class="hero-section">
+    <div class="hero-content">
+        <p class="hero-eyebrow">Canal Oficial · Grupo Alvim</p>
+        <h1 class="hero-title">Sua voz<br>faz a <em>diferença</em></h1>
+        <p class="hero-desc">Denuncie ou envie sugestões de forma segura e confidencial. Cada reporte ajuda a melhorar o BK para todos.</p>
+        <a href="{{ url_for('submit') }}" class="hero-cta">
+            <i class="bi bi-flag-fill icon"></i>
+            Fazer denúncia agora
+        </a>
+    </div>
+</section>
+
+<!-- CATEGORIES -->
+<p class="section-eyebrow">O que você pode reportar</p>
+<h2 class="section-title">Categorias</h2>
+
+<div class="category-grid">
+    <a href="{{ url_for('submit') }}" class="category-card">
+        <span class="category-icon">⚠️</span>
+        <span class="category-name">Assédio</span>
+    </a>
+    <a href="{{ url_for('submit') }}" class="category-card">
+        <span class="category-icon">🧹</span>
+        <span class="category-name">Higiene</span>
+    </a>
+    <a href="{{ url_for('submit') }}" class="category-card">
+        <span class="category-icon">😞</span>
+        <span class="category-name">Atendimento</span>
+    </a>
+    <a href="{{ url_for('submit') }}" class="category-card">
+        <span class="category-icon">⚙️</span>
+        <span class="category-name">Operações</span>
+    </a>
+    <a href="{{ url_for('submit') }}" class="category-card">
+        <span class="category-icon">💡</span>
+        <span class="category-name">Sugestões</span>
+    </a>
+    <a href="{{ url_for('submit') }}" class="category-card">
+        <span class="category-icon">📋</span>
+        <span class="category-name">Outros</span>
+    </a>
+</div>
+
+<!-- HOW IT WORKS -->
+<p class="section-eyebrow">Como funciona</p>
+<h2 class="section-title">Simples e Seguro</h2>
+
+<div class="steps-grid">
+    <div class="step-card">
+        <div class="step-number">01</div>
+        <div class="step-title">Registre</div>
+        <p class="step-desc">Preencha o formulário com os detalhes do ocorrido. Pode ser anônimo.</p>
+    </div>
+    <div class="step-card">
+        <div class="step-number">02</div>
+        <div class="step-title">Análise</div>
+        <p class="step-desc">Nossa equipe recebe e analisa cada reporte com seriedade e confidencialidade.</p>
+    </div>
+    <div class="step-card">
+        <div class="step-number">03</div>
+        <div class="step-title">Resolução</div>
+        <p class="step-desc">Acompanhe o status e veja a resolução do seu reporte pelo painel.</p>
+    </div>
+</div>
+
+{% endblock %}

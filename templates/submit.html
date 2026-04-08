@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+.submit-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 2rem;
+    align-items: start;
+}
+
+.submit-main {
+    background: white;
+    border: 1.5px solid rgba(0,0,0,0.07);
+    border-radius: 16px;
+    padding: 2.5rem;
+}
+
+.form-section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bk-orange);
+    margin-bottom: 1rem;
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.form-section-title:first-of-type {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.form-field { margin-bottom: 1.25rem; }
+
+.form-field label,
+.form-field > label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bk-brown);
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.form-field input[type="text"],
+.form-field input[type="file"],
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    background: var(--bk-gray);
+    border: 1.5px solid transparent;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    color: var(--bk-dark);
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    outline: none;
+    background: white;
+    border-color: var(--bk-orange);
+    box-shadow: 0 0 0 3px rgba(245,130,31,0.1);
+}
+
+.form-field textarea { resize: vertical; min-height: 120px; }
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Anonymous toggle */
+.anon-toggle {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #FFF8F0;
+    border: 1.5px solid var(--bk-yellow);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.75rem;
+    cursor: pointer;
+}
+
+.anon-toggle input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--bk-orange);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.anon-toggle-text {}
+
+.anon-toggle-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--bk-brown);
+    display: block;
+    margin-bottom: 2px;
+}
+
+.anon-toggle-desc {
+    font-size: 0.82rem;
+    color: #888;
+    line-height: 1.4;
+}
+
+/* Submit button */
+.btn-submit {
+    width: 100%;
+    background: var(--bk-red);
+    color: white;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 2rem;
+}
+
+.btn-submit:hover { background: #b81f00; transform: translateY(-1px); }
+
+/* Sidebar */
+.submit-sidebar {}
+
+.info-card {
+    background: var(--bk-dark);
+    border-radius: 14px;
+    padding: 1.75rem;
+    margin-bottom: 1rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-card::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 100px; height: 100px;
+    background: var(--bk-red);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.info-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bk-yellow);
+    margin-bottom: 1rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.85rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.75);
+    position: relative;
+    z-index: 1;
+}
+
+.info-item:last-child { margin-bottom: 0; }
+
+.info-icon {
+    color: var(--bk-orange);
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.tip-card {
+    background: white;
+    border: 1.5px solid rgba(0,0,0,0.07);
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
+}
+
+.tip-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bk-orange);
+    margin-bottom: 0.75rem;
+}
+
+.tip-item {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.55;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.tip-item::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--bk-orange);
+}
+
+@media (max-width: 768px) {
+    .submit-layout { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .submit-sidebar { display: none; }
+}
+</style>
+
+<div class="bk-heading">Nova Denúncia ou Sugestão</div>
+
+<div class="submit-layout">
+    <div class="submit-main">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <!-- Anonimato -->
+            <label class="anon-toggle">
+                {{ form.is_anonymous(class="") }}
+                <div class="anon-toggle-text">
+                    <span class="anon-toggle-label"><i class="bi bi-shield-check me-1"></i> Enviar anonimamente</span>
+                    <span class="anon-toggle-desc">Sua identidade não será revelada. Ninguém saberá quem enviou este reporte.</span>
+                </div>
+            </label>
+
+            <!-- Tipo e Categoria -->
+            <div class="form-section-title">Classificação</div>
+            <div class="form-row">
+                <div class="form-field">
+                    {{ form.type.label }}
+                    {{ form.type(class="") }}
+                </div>
+                <div class="form-field">
+                    {{ form.category.label }}
+                    {{ form.category(class="") }}
+                </div>
+            </div>
+
+            <!-- Detalhes -->
+            <div class="form-section-title">Detalhes</div>
+
+            <div class="form-field">
+                {{ form.title.label }}
+                {{ form.title(class="") }}
+            </div>
+
+            <div class="form-field">
+                {{ form.location.label }}
+                {{ form.location(class="", placeholder="Ex: Loja Shopping Iguatemi – São Paulo") }}
+            </div>
+
+            <div class="form-field">
+                {{ form.description.label }}
+                {{ form.description(class="", rows="5", placeholder="Descreva o ocorrido com o máximo de detalhes possível...") }}
+            </div>
+
+            <!-- Evidência -->
+            <div class="form-section-title">Evidência (opcional)</div>
+
+            <div class="form-field">
+                {{ form.image.label }}
+                {{ form.image(class="") }}
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="bi bi-send-fill"></i>
+                Enviar Reporte
+            </button>
+        </form>
+    </div>
+
+    <div class="submit-sidebar">
+        <div class="info-card">
+            <div class="info-card-title">Sua Proteção</div>
+            <div class="info-item">
+                <i class="bi bi-shield-lock-fill info-icon"></i>
+                <span>Todos os dados são criptografados e protegidos.</span>
+            </div>
+            <div class="info-item">
+                <i class="bi bi-eye-slash-fill info-icon"></i>
+                <span>Reportes anônimos não vinculam sua identidade ao conteúdo.</span>
+            </div>
+            <div class="info-item">
+                <i class="bi bi-people-fill info-icon"></i>
+                <span>Apenas administradores autorizados têm acesso.</span>
+            </div>
+        </div>
+
+        <div class="tip-card">
+            <div class="tip-card-title">Dicas para um bom reporte</div>
+            <p class="tip-item">Seja específico sobre data, horário e local.</p>
+            <p class="tip-item">Descreva os envolvidos sem julgamentos.</p>
+            <p class="tip-item">Inclua evidências se possível (foto, print).</p>
+            <p class="tip-item">Um detalhe a mais pode fazer a diferença.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

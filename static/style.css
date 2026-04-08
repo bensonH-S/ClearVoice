@@ -1,0 +1,41 @@
+/* BK Reporte — Grupo Alvim
+   style.css — complementary styles */
+
+:root {
+    --bk-red: #D62300;
+    --bk-orange: #F5821F;
+    --bk-yellow: #FFCB1F;
+    --bk-brown: #502314;
+    --bk-dark: #1A0A00;
+    --bk-cream: #FFF8F0;
+    --bk-gray: #F2F0EC;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+/* Selection */
+::selection {
+    background: var(--bk-yellow);
+    color: var(--bk-brown);
+}
+
+/* Focus visible */
+:focus-visible {
+    outline: 2px solid var(--bk-orange);
+    outline-offset: 2px;
+}
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* Remove default form styles */
+input, select, textarea, button {
+    font-family: inherit;
+}
+
+/* Transition reset for links */
+a { transition: color 0.12s; }

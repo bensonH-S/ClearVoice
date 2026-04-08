@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border: 1.5px solid rgba(0,0,0,0.07);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 0.4rem;
+}
+
+.stat-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--bk-dark);
+    line-height: 1;
+}
+
+.stat-card.highlight { border-color: var(--bk-red); }
+.stat-card.highlight .stat-value { color: var(--bk-red); }
+
+/* Table */
+.admin-table-wrap {
+    background: white;
+    border: 1.5px solid rgba(0,0,0,0.07);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table thead tr {
+    background: var(--bk-dark);
+}
+
+.admin-table thead th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    padding: 1rem 1.25rem;
+    border: none;
+    white-space: nowrap;
+}
+
+.admin-table tbody tr {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    transition: background 0.1s;
+}
+
+.admin-table tbody tr:last-child { border-bottom: none; }
+.admin-table tbody tr:hover { background: #FFFAF5; }
+
+.admin-table td {
+    padding: 1rem 1.25rem;
+    font-size: 0.88rem;
+    color: var(--bk-dark);
+    vertical-align: middle;
+}
+
+.td-date {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.82rem;
+    color: #999;
+    white-space: nowrap;
+}
+
+.td-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    max-width: 220px;
+}
+
+.td-category {
+    font-size: 0.82rem;
+    color: #666;
+}
+
+/* Badge */
+.bk-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.bk-badge-denuncia { background: #FEE2E0; color: var(--bk-red); }
+.bk-badge-sugestao  { background: #FFF3CC; color: #7A5200; }
+
+/* Status select */
+.status-select {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 5px 10px;
+    background: white;
+    cursor: pointer;
+    color: var(--bk-dark);
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 26px;
+}
+
+.status-select:focus {
+    outline: none;
+    border-color: var(--bk-orange);
+}
+
+.btn-view {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bk-red);
+    text-decoration: none;
+    border: 1.5px solid var(--bk-red);
+    border-radius: 6px;
+    padding: 5px 12px;
+    transition: background 0.12s, color 0.12s;
+    white-space: nowrap;
+}
+
+.btn-view:hover {
+    background: var(--bk-red);
+    color: white;
+}
+
+/* Filter bar */
+.filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 6px 14px;
+    background: white;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.12s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: var(--bk-dark);
+    color: white;
+    border-color: var(--bk-dark);
+}
+
+@media (max-width: 768px) {
+    .admin-stats { grid-template-columns: repeat(2, 1fr); }
+    .admin-table-wrap { overflow-x: auto; }
+    .admin-table { min-width: 640px; }
+}
+</style>
+
+<div class="admin-header">
+    <div class="bk-heading">Painel Administrativo</div>
+    <span style="font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; letter-spacing:0.08em; text-transform:uppercase; background:#FFF3CC; color:#7A5200; padding:6px 14px; border-radius:6px;">
+        <i class="bi bi-shield-check me-1"></i> Acesso Admin
+    </span>
+</div>
+
+<!-- Stats -->
+<div class="admin-stats">
+    <div class="stat-card highlight">
+        <div class="stat-label">Pendentes</div>
+        <div class="stat-value">{{ reports | selectattr('status', 'equalto', 'Pendente') | list | length }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Em Análise</div>
+        <div class="stat-value">{{ reports | selectattr('status', 'equalto', 'Em Análise') | list | length }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Resolvidos</div>
+        <div class="stat-value">{{ reports | selectattr('status', 'equalto', 'Resolvido') | list | length }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total</div>
+        <div class="stat-value">{{ reports | list | length }}</div>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="admin-table-wrap">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Título</th>
+                <th>Categoria</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td class="td-date">{{ report.created_at.strftime('%d/%m/%Y') }}</td>
+                <td>
+                    <span class="bk-badge bk-badge-{{ report.type }}">
+                        {{ 'Denúncia' if report.type == 'denuncia' else 'Sugestão' }}
+                    </span>
+                </td>
+                <td class="td-title">{{ report.title }}</td>
+                <td class="td-category">{{ report.category }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('update_status', report_id=report.id) }}">
+                        <select name="status" class="status-select" onchange="this.form.submit()">
+                            <option value="Pendente" {{ 'selected' if report.status=='Pendente' }}>Pendente</option>
+                            <option value="Em Análise" {{ 'selected' if report.status=='Em Análise' }}>Em Análise</option>
+                            <option value="Resolvido" {{ 'selected' if report.status=='Resolvido' }}>Resolvido</option>
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    <a href="#" class="btn-view">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
